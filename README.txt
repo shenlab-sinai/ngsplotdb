@@ -1,5 +1,5 @@
 It is the pipeline for animal annotations of ensembl and UCSC.
-Copied and modified from ensembl.
+Copied and modified from our ensembl database pipeline.
 
 Workflow:
 1. Download gene annotations from ensembl and UCSC, then generate the annotations in plain text and RData.
