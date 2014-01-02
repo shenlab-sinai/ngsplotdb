@@ -1,0 +1,2 @@
+panTro4	CHIMP2.1.4	pan_troglodytes	74	1.00
+rheMac2	MMUL_1	macaca_mulatta	74	1.00
