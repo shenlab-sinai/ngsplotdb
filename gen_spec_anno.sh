@@ -16,11 +16,15 @@ if [ ! -d "./spec_anno/${GENOME}" ]; then
 	| grep -v chromStart > ${GENOME}_telomere.bed
 	if [ ! -s "${GENOME}_centromere.bed" ]; then
 		echo "No centromere info in ${GENOME} database, dumb entry will be used!"
-		cp ./spec_anno/dumb/dumb_pericentromeres.bed ./spec_anno/${GENOME}/${GENOME}_pericentromere.bed
+		rm ${GENOME}_centromere.bed
+		cp -f ./spec_anno/dumb/dumb_pericentromeres.bed ./spec_anno/${GENOME}/${GENOME}_centromere.bed
+		cp -f ./spec_anno/dumb/dumb_pericentromeres.bed ./spec_anno/${GENOME}/${GENOME}_pericentromere.bed
 	fi
 	if [ ! -s "${GENOME}_telomere.bed" ]; then
 		echo "No telomere info in ${GENOME} database, dumb entry will be used!"
-		cp ./spec_anno/dumb/dumb_subtelomeres.bed ./spec_anno/${GENOME}/${GENOME}_subtelomere.bed
+		rm ${GENOME}_telomere.bed
+		cp -f ./spec_anno/dumb/dumb_subtelomeres.bed ./spec_anno/${GENOME}/${GENOME}_telomere.bed
+		cp -f ./spec_anno/dumb/dumb_subtelomeres.bed ./spec_anno/${GENOME}/${GENOME}_subtelomere.bed
 	fi
 fi
 
@@ -50,8 +54,8 @@ fi
 awk 'BEGIN{FS="\t"};{if(($3-$2)>=1e6){print $0}}' ${GENOME}_gap.bed | \
 	subtractBed -a - -b ./spec_anno/${GENOME}/${GENOME}_pericentromere.bed | \
 	subtractBed -a - -b ./spec_anno/${GENOME}/${GENOME}_subtelomere.bed | \
-	subtractBed -a - -b ${GENOME}_telomere.bed | \
-	subtractBed -a - -b ${GENOME}_centromere.bed | \
+	subtractBed -a - -b ./spec_anno/${GENOME}/${GENOME}_telomere.bed | \
+	subtractBed -a - -b ./spec_anno/${GENOME}/${GENOME}_centromere.bed | \
 	awk 'BEGIN{OFS="\t"}{if(($3-$2)>=1e6){print $1, $2+1e4, $3-1e4}}' > ${GENOME}_geneDesert.bed # 10k from the nearest genes
 
 for i in ./tmp/${GENOME}*.biotype.txt; do
