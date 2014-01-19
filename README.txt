@@ -4,9 +4,10 @@ Copied and modified from our ensembl database pipeline.
 Usage: ./genDB.sh db_list.txt [animal|plant]
 
 Workflow:
-1. Download gene annotations from ensembl and UCSC, then generate the annotations in plain text and RData. If no annotation in UCSC, then only ensembl annotation was generated.
-2. Generate meta-info data of the annotations.
-3. Process the annotation files for region_analysis (if no UCSC Refseq annotation, will be skipped):
+1. Read pipeline configuration from [animal|plant].json under ./json, and parsing the information of genomes from db_list.txt.
+2. Download gene annotations from ensembl and UCSC, then generate the annotations in plain text and RData. If no annotation in UCSC, then only ensembl annotation was generated.
+3. Generate meta-info data of the annotations.
+4. Process the annotation files for region_analysis (if no UCSC Refseq annotation, will be skipped):
 	A. Prepare the annotation fiels for pericentromere and subtelomere:
 		a. If there are ready info of pericentromere and subtelomere, then use the ready files. If not, then:
 		b. If UCSC has standard gap table of genome gap, then download centromere and telomere annotations and calculate pericentromere and subtelomeres. If not, then:
@@ -14,10 +15,10 @@ Workflow:
 	B. Calculate the gene desert regions.
 	C. Extend the annotations of genes to the regions needed by region_analysis: upstream 3k, downstream 1k.
 	D. Install the new databases to region_analysis.
-4. Download the CpG islands annotations from UCSC. If the result is not empty, then:
+5. Download the CpG islands annotations from UCSC. If the result is not empty, then:
 	A. Annotate CGI by region_analysis.
 	B. Generate RData of CGI
-5. Pack all annotations.
+6. Pack all annotations.
 
 Attention:
 1. Pipeline templates are under ./json folder. Now animal and plant are supported.
@@ -28,3 +29,4 @@ Attention:
 	C. "'" in Arabidopsis Tair10 gene names.
 4. No UCSC Refseq annotation in zebrafish genome.
 5. CORES, defined at the beginning of genDB.sh, is the threads used in the pipeline. Now I set it as 4.
+6. NPVer is defined at the beginning of genDB.sh.
