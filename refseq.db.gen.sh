@@ -14,4 +14,3 @@ else
 	echo "No ${1} genome annotation in UCSC!"
 	rm ./tmp/${1}.refseq.gp
 fi
-

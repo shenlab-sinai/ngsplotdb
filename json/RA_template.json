@@ -1,0 +1,11 @@
+{
+	"genome": "", "version": "", "species": "", "assembly": "",
+	"databases":[
+	{
+		"database": "refseq", "version": ""
+	},
+	{
+		"database": "ensembl", "version": ""
+	}
+	]
+}

@@ -1,13 +1,31 @@
 #! /bin/bash
-TARGET_GENOME=${1}
-DBLIST=$2
-GENOME=`grep ${TARGET_GENOME} ${DBLIST} | cut -f2,2`
-SPECIES=`grep ${TARGET_GENOME} ${DBLIST} | cut -f3,3`
+TARGET_GENOME=$1
+GENOME=$2
+SPECIES=$3
 SPECIES_NAME="$(tr '[:lower:]' '[:upper:]' <<< ${SPECIES:0:1})${SPECIES:1}"
 echo ${SPECIES_NAME}
-VERSION=`grep ${TARGET_GENOME} ${DBLIST} | cut -f4,4`
-echo "wget -q -O ./tmp/${SPECIES_NAME}.${GENOME}.${VERSION}.gtf.gz ftp://ftp.ensembl.org/pub/release-${VERSION}/gtf/${SPECIES}/${SPECIES_NAME}.${GENOME}.${VERSION}.gtf.gz"
-wget -q -O ./tmp/${SPECIES_NAME}.${GENOME}.${VERSION}.gtf.gz ftp://ftp.ensembl.org/pub/release-${VERSION}/gtf/${SPECIES}/${SPECIES_NAME}.${GENOME}.${VERSION}.gtf.gz
+VERSION=$4
+ENS_PATH=$5
+PIPELINE_TYPE=$6
+
+case ${PIPELINE_TYPE} in 
+	"animal" )
+		GFF=`echo ${ENS_PATH} | sed -e "s/\*SPECIES_NAME\*/${SPECIES_NAME}/g" \
+			-e "s/\*SPECIES\*/${SPECIES}/g" \
+			-e "s/\*VERSION\*/${VERSION}/g" \
+			-e "s/\*GENOME\*/${GENOME}/g"`
+			;;
+	"plant" )
+		GFF=`echo ${ENS_PATH} | sed -e "s/\*SPECIES_NAME\*/${SPECIES_NAME}/g" \
+			-e "s/\*SPECIES\*/${SPECIES}/g" \
+			-e "s/\*VERSION\*/${VERSION}/g" \
+			-e "s/\*GENOME\*/${GENOME}/g"`
+			;;
+	*) echo "Unknown PIPELINE_TYPE!"
+esac
+
+echo -e "wget -q -O ./tmp/${SPECIES_NAME}.${GENOME}.${VERSION}.gtf.gz ${GFF}"
+wget -q -O ./tmp/${SPECIES_NAME}.${GENOME}.${VERSION}.gtf.gz ${GFF}
 cd tmp
 gunzip ${SPECIES_NAME}.${GENOME}.${VERSION}.gtf.gz
 mv ${SPECIES_NAME}.${GENOME}.${VERSION}.gtf ${TARGET_GENOME}.ensembl.gtf

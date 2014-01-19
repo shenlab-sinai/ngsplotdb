@@ -1,0 +1,3 @@
+Tair10	TAIR10	arabidopsis_thaliana	21
+AGPv3	AGPv3	zea_mays	21
+IRGSP-1	IRGSP-1.0	oryza_sativa	21
