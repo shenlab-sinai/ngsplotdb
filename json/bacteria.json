@@ -1,0 +1,8 @@
+{
+	"ID":1,
+	"Assembly": 2,
+	"Bacteria_Collection":3,
+	"Species": 4,
+	"EnsVer": 5,
+	"EnsPath": "ftp://ftp.ensemblgenomes.org/pub/release-*VERSION*/bacteria/gtf/*BACTERIA_COLLECTION*/*SPECIES*/*SPECIES_NAME*.*GENOME*.*VERSION*.gtf.gz"
+}

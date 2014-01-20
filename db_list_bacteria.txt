@@ -1,0 +1,2 @@
+sulfAcid1	GCA_000012285.1	bacteria_8_collection	sulfolobus_acidocaldarius_dsm_639	21
+Asm852v1	GCA_000008525.1	bacteria_22_collection	helicobacter_pylori_26695_asm852v1	21

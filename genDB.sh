@@ -56,7 +56,7 @@ function ngsplotdb(){
 	echo -e "${GENOMES[${i}]}"
 	echo "Processing ensembl annotation..."
 	./ensembl.db.gen.sh ${GENOMES[${i}]} ${AMS[${i}]} ${SPS[${i}]} \
-		${ENS[${i}]} ${ENS_PATH} ${PIPELINE_TYPE}
+		${ENS[${i}]} ${ENS_PATH} ${PIPELINE_TYPE} ${i} ${DBLIST}
 	echo "Processing refseq annotation..."
 	./refseq.db.gen.sh ${GENOMES[${i}]}
 	mkdir -p ./database/${GENOMES[${i}]}/

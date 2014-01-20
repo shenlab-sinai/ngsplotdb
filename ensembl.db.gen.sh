@@ -7,6 +7,8 @@ echo ${SPECIES_NAME}
 VERSION=$4
 ENS_PATH=$5
 PIPELINE_TYPE=$6
+i=$7
+DBLIST=$8
 
 case ${PIPELINE_TYPE} in 
 	"animal" )
@@ -17,6 +19,16 @@ case ${PIPELINE_TYPE} in
 			;;
 	"plant" )
 		GFF=`echo ${ENS_PATH} | sed -e "s/\*SPECIES_NAME\*/${SPECIES_NAME}/g" \
+			-e "s/\*SPECIES\*/${SPECIES}/g" \
+			-e "s/\*VERSION\*/${VERSION}/g" \
+			-e "s/\*GENOME\*/${GENOME}/g"`
+			;;
+	"bacteria" )
+		BAC_COLLECTION_COL=`cat json/"${PIPELINE_TYPE}".json | ./jq -r '.Bacteria_Collection'`
+		BAC_COLLECTS=( $(cut -f"${BAC_COLLECTION_COL}" ${DBLIST}) )
+		BAC_COLLECT=${BAC_COLLECTS[${i}]}
+		GFF=`echo ${ENS_PATH} | sed -e "s/\*SPECIES_NAME\*/${SPECIES_NAME}/g" \
+			-e "s/\*BACTERIA_COLLECTION\*/${BAC_COLLECT}/g" \
 			-e "s/\*SPECIES\*/${SPECIES}/g" \
 			-e "s/\*VERSION\*/${VERSION}/g" \
 			-e "s/\*GENOME\*/${GENOME}/g"`
