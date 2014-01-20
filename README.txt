@@ -1,13 +1,13 @@
-It is the pipeline for animal annotations of ensembl and UCSC.
+It is the pipeline for annotations of ensembl and UCSC.
 Copied and modified from our ensembl database pipeline.
 
-Usage: ./genDB.sh db_list.txt [animal|plant]
+Usage: ./genDB.sh db_list.txt [animal|plant|bacteria]
 
 Workflow:
-1. Read pipeline configuration from [animal|plant].json under ./json, and parsing the information of genomes from db_list.txt.
+1. Read pipeline configuration from [animal|plant|bacteria].json under ./json, and parsing the information of genomes from db_list.txt.
 2. Download gene annotations from ensembl and UCSC, then generate the annotations in plain text and RData. If no annotation in UCSC, then only ensembl annotation was generated.
 3. Generate meta-info data of the annotations.
-4. Process the annotation files for region_analysis (if no UCSC Refseq annotation, will be skipped):
+4. Process the annotation files for region_analysis (if no UCSC Refseq annotation, this step will be skipped):
 	A. Prepare the annotation fiels for pericentromere and subtelomere:
 		a. If there are ready info of pericentromere and subtelomere, then use the ready files. If not, then:
 		b. If UCSC has standard gap table of genome gap, then download centromere and telomere annotations and calculate pericentromere and subtelomeres. If not, then:
@@ -22,7 +22,7 @@ Workflow:
 
 Attention:
 1. Pipeline templates are under ./json folder. Now animal and plant are supported.
-2. When re-generate the databases of "animal", the deletion of installed annotations of region_analysis is needed. Generally remove all files under ~/.config/regionsanalysis is enough.
+2. When re-generate the databases of "animal", the deletion of installed annotations of region_analysis is needed. Generally removing all files under ~/.config/regionsanalysis is enough.
 3. Some genomes have wired nominations and take trouble for parsing. For now what I know:
 	A. "#" in yeast sacCer3 gene names.
 	B. ";" in rice IRGSP-1 transcript ids.
