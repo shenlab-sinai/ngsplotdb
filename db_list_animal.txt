@@ -11,3 +11,5 @@ mm10	GRCm38	mus_musculus	74
 sacCer3	EF4	saccharomyces_cerevisiae	74
 dm3	BDGP5	drosophila_melanogaster	74
 Zv9	Zv9	danio_rerio	74
+ce6	WS220	caenorhabditis_elegans	66
+ceX	WBcel235	caenorhabditis_elegans	74
