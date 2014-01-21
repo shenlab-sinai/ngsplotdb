@@ -30,3 +30,12 @@ Attention:
 4. No UCSC Refseq annotation in zebrafish genome.
 5. CORES, defined at the beginning of genDB.sh, is the threads used in the pipeline. Now I set it as 4.
 6. NPVer is defined at the beginning of genDB.sh.
+
+
+ENCODE_cellline_dhs:
+For the annotation of ENCODE DHS regions.
+Multiple threads are supported, default is 4.
+
+TODO:
+	* Need to decide annotation location.
+	* Now it needs hg19.ensembl.biotype.txt to get gene name, it is annoying.
