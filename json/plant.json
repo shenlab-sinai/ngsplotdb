@@ -1,0 +1,7 @@
+{
+	"ID":1,
+	"Assembly": 2,
+	"Species": 3,
+	"EnsVer": 4,
+	"EnsPath": "ftp://ftp.ensemblgenomes.org/pub/release-*VERSION*/plants/gtf/*SPECIES*/*SPECIES_NAME*.*GENOME*.*VERSION*.gtf.gz"
+}

@@ -1,0 +1,5 @@
+ID	*ID*
+Assembly	*ASSEMBLY*
+Species	*SPECIES*
+EnsVer	*ENSVER*
+NPVer	*NPVER*

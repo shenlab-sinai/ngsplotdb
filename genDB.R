@@ -1,6 +1,7 @@
 make_gene_model <- function(txtfile){
 	stopifnot(is.character(txtfile))
-	gene.tbl <- try(read.table(txtfile, comment.char='', sep="\t", as.is=T, 
+	# there are gene names with quote in Tair10!
+	gene.tbl <- try(read.table(txtfile, comment.char='', sep="\t", as.is=T,  quote="",
 		col.names=c('chrom', 'start', 'end', 'gid', 'gname', 'tid', 'strand', 'region', 'class', 'biotype')))
 	if(class(gene.tbl) == "try-error"){
 		gene.tbl <- read.table(txtfile, comment.char='', sep="\t", as.is=T, 
