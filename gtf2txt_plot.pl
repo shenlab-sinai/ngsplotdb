@@ -3,7 +3,7 @@
 # and output genebody and exonic coordinates to a TABULAR file for ngs.plot.
 
 use strict;
-use MyBioinfo::GTF;
+use GTF;
 
 # Program arguments.
 if(@ARGV<1){
