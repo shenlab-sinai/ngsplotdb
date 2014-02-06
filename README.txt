@@ -1,7 +1,9 @@
 It is the pipeline for annotations of ensembl and UCSC.
 Copied and modified from our ensembl database pipeline.
 
-Usage: ./genDB.sh db_list.txt [animal|plant|bacteria]
+Usage: 
+Add ./bin to $PATH, then makedir a new folder, then run:
+> genDB.sh db_list.txt [animal|plant|bacteria].json
 
 Workflow:
 1. Read pipeline configuration from [animal|plant|bacteria].json under ./json, and parsing the information of genomes from db_list.txt.
@@ -21,7 +23,7 @@ Workflow:
 6. Pack all annotations.
 
 Attention:
-1. Pipeline templates are under ./json folder. Now animal and plant are supported.
+1. Pipeline templates are under ./json folder. Now animal, plant, and bacteria are supported.
 2. When re-generate the databases of "animal", the deletion of installed annotations of region_analysis is needed. Generally removing all files under ~/.config/regionsanalysis is enough.
 3. Some genomes have wired nominations and take trouble for parsing. For now what I know:
 	A. "#" in yeast sacCer3 gene names.
@@ -37,5 +39,4 @@ For the annotation of ENCODE DHS regions.
 Multiple threads are supported, default is 4.
 
 TODO:
-	* Need to decide annotation location.
 	* Now it needs hg19.ensembl.biotype.txt to get gene name, it is annoying.

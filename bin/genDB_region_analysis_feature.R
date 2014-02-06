@@ -58,9 +58,9 @@ feature <- args[2]
 db.name <- args[3]
 
 anno.file <- args[4]
+feature.anno <- args[5]
 
 anno <- list()
-feature.anno <- paste('./tmp/',species,'.',feature,'.',db.name,'.txt', sep='')
 print(feature.anno)
 if(file.exists(feature.anno)){
 	if(db.name=='ensembl'){

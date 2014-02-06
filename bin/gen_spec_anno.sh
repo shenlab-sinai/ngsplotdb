@@ -5,9 +5,14 @@ NPVER=${2}
 ENSVER=${3}
 SPECIES=${4}
 ASSEMBLY=${5}
+PRO_BIN_PATH=${6}
+## To get data folder under project, Mac OSX doesn't support readlink
+## PRO_DATA_PATH=$(readlink -m ${PRO_BIN_PATH}/../data)
+PRO_DATA_PATH=$(cd ${PRO_BIN_PATH}/../data; pwd)
+NP_DB_PATH=${7}
 
-GENOME_ANNO_DIR="./tmp"
-RA_PATH="./RA/${GENOME}_${NPVER}_En${ENSVER}"
+GENOME_ANNO_DIR="${NP_DB_PATH}/tmp"
+RA_PATH="${NP_DB_PATH}/RA/${GENOME}_${NPVER}_En${ENSVER}"
 
 mkdir -p ${RA_PATH}
 
@@ -15,7 +20,7 @@ mysql --user=genome --host=genome-mysql.cse.ucsc.edu -A -e \
 	"select chrom, size from "${GENOME}".chromInfo"  > ${RA_PATH}/${GENOME}.genome
 
 ## if no ready info, try to fetch centromere and telomere info from UCSC
-if [ ! -d "./spec_anno/${GENOME}" ]; then
+if [ ! -d "${PRO_DATA_PATH}/spec_anno/${GENOME}" ]; then
 	echo "Querying centromere and telomere information from UCSC..."
 	mysql --user=genome --host=genome-mysql.cse.ucsc.edu -A -D ${GENOME} -e 'select chrom, chromStart, chromEnd from gap where type="centromere"' \
 	| grep -v chromStart > ${RA_PATH}/${GENOME}_centromere.bed
@@ -24,21 +29,21 @@ if [ ! -d "./spec_anno/${GENOME}" ]; then
 	if [ ! -s "${RA_PATH}/${GENOME}_centromere.bed" ]; then
 		echo "No centromere info in ${GENOME} database, dumb entry will be used!"
 		rm ${RA_PATH}/${GENOME}_centromere.bed
-		cp -f ./spec_anno/dumb/dumb_pericentromere.bed ${RA_PATH}/${GENOME}_centromere.bed
-		cp -f ./spec_anno/dumb/dumb_pericentromere.bed ${RA_PATH}/${GENOME}_pericentromere.bed
+		cp -f ${PRO_DATA_PATH}/spec_anno/dumb/dumb_pericentromere.bed ${RA_PATH}/${GENOME}_centromere.bed
+		cp -f ${PRO_DATA_PATH}/spec_anno/dumb/dumb_pericentromere.bed ${RA_PATH}/${GENOME}_pericentromere.bed
 	fi
 	if [ ! -s "${RA_PATH}/${GENOME}_telomere.bed" ]; then
 		echo "No telomere info in ${GENOME} database, dumb entry will be used!"
 		rm ${RA_PATH}/${GENOME}_telomere.bed
-		cp -f ./spec_anno/dumb/dumb_subtelomere.bed ${RA_PATH}/${GENOME}_telomere.bed
-		cp -f ./spec_anno/dumb/dumb_subtelomere.bed ${RA_PATH}/${GENOME}_subtelomere.bed
+		cp -f ${PRO_DATA_PATH}/spec_anno/dumb/dumb_subtelomere.bed ${RA_PATH}/${GENOME}_telomere.bed
+		cp -f ${PRO_DATA_PATH}/spec_anno/dumb/dumb_subtelomere.bed ${RA_PATH}/${GENOME}_subtelomere.bed
 	fi
 else
 	echo "Using predefined pericentromere and subtelomere information..."
-	cp -f ./spec_anno/${GENOME}/${GENOME}_centromere.bed ${RA_PATH}/${GENOME}_centromere.bed
-	cp -f ./spec_anno/${GENOME}/${GENOME}_telomere.bed ${RA_PATH}/${GENOME}_telomere.bed
-	cp -f ./spec_anno/${GENOME}/${GENOME}_pericentromere.bed ${RA_PATH}/${GENOME}_pericentromere.bed
-	cp -f ./spec_anno/${GENOME}/${GENOME}_subtelomere.bed ${RA_PATH}/${GENOME}_subtelomere.bed
+	cp -f ${PRO_DATA_PATH}/spec_anno/${GENOME}/${GENOME}_centromere.bed ${RA_PATH}/${GENOME}_centromere.bed
+	cp -f ${PRO_DATA_PATH}/spec_anno/${GENOME}/${GENOME}_telomere.bed ${RA_PATH}/${GENOME}_telomere.bed
+	cp -f ${PRO_DATA_PATH}/spec_anno/${GENOME}/${GENOME}_pericentromere.bed ${RA_PATH}/${GENOME}_pericentromere.bed
+	cp -f ${PRO_DATA_PATH}/spec_anno/${GENOME}/${GENOME}_subtelomere.bed ${RA_PATH}/${GENOME}_subtelomere.bed
 fi
 
 # gene gaps: for gene desert
@@ -78,28 +83,30 @@ awk 'BEGIN{FS="\t"};{if(($3-$2)>=1e6){print $0}}' ${RA_PATH}/${GENOME}_gap.bed |
 	awk 'BEGIN{OFS="\t"}{if(($3-$2)>=1e6){print $1, $2+1e4, $3-1e4}}' > ${RA_PATH}/${GENOME}_geneDesert.bed # 10k from the nearest genes
 
 echo "Generating genome annotation..."
-for i in ./tmp/${GENOME}*.biotype.txt; do
+for i in ${NP_DB_PATH}/tmp/${GENOME}*.biotype.txt; do
 	## fulfill the empty gene symbol column with "NA"
 	grep genebody ${i} | sed 's/^\t/NA\t/;:a;s/\t\t/\tNA\t/g;ta;s/\t$/\tNA/' | \
 		egrep "^chr" | grep -v "random" | egrep -v "^NT" > ${i/txt/bed}
-	cut -f2,3 ${i/txt/bed} | paste ${i/txt/bed} - > temp.bed
-	slopBed -l 3e3 -r 1e3 -g ${RA_PATH}/${GENOME}.genome -s -i temp.bed | \
-		awk '{if(($3>$2)&&($3>0))print $0}' > temp_ext.bed
-	mv temp_ext.bed ${i/biotype.txt/biotype_region_ext.bed}
-	rm temp.bed
+	cut -f2,3 ${i/txt/bed} | paste ${i/txt/bed} - > ${NP_DB_PATH}/tmp/${GENOME}.temp.bed
+	slopBed -l 3e3 -r 1e3 -g ${RA_PATH}/${GENOME}.genome -s -i ${NP_DB_PATH}/tmp/${GENOME}.temp.bed | \
+		awk '{if(($3>$2)&&($3>0))print $0}' > ${NP_DB_PATH}/tmp/${GENOME}.temp_ext.bed
+	mv ${NP_DB_PATH}/tmp/${GENOME}.temp_ext.bed ${i/biotype.txt/biotype_region_ext.bed}
+	rm ${NP_DB_PATH}/tmp/${GENOME}.temp.bed
 done
 
 rm ${RA_PATH}/${GENOME}_gap.bed
 if [ -f "${RA_PATH}/${GENOME}_gene_ext10k.bed" ]; then
 	rm ${RA_PATH}/${GENOME}_gene_ext10k.bed
 fi
-mv ./tmp/${GENOME}*biotype_region_ext.bed ${RA_PATH}/
+mv ${NP_DB_PATH}/tmp/${GENOME}*biotype_region_ext.bed ${RA_PATH}/
 # mv ${GENOME}*.bed ${RA_PATH}/
 
-python genRA_json.py ${GENOME} ${NPVER} ${SPECIES} ${ASSEMBLY} ${ENSVER} ${RA_PATH}
-cd RA
+${PRO_BIN_PATH}/genRA_json.py ${GENOME} ${NPVER} ${SPECIES} ${ASSEMBLY} \
+	${ENSVER} ${RA_PATH} ${PRO_DATA_PATH}
+CUR_PATH=`pwd`
+cd ${RA_PATH}/..
 echo "Compressing annotation package for Region_Analysis..."
 tar czvf ${GENOME}_${NPVER}_En${ENSVER}.tar.gz ${GENOME}_${NPVER}_En${ENSVER}
 echo "Installing package for Region_Analysis..."
 region_analysis_db.py install ${GENOME}_${NPVER}_En${ENSVER}.tar.gz
-cd ..
+cd ${CUR_PATH}

@@ -1,0 +1,4 @@
+2014-02-06
+1. The layout of the pipeline was re-organized, all excutibale files are under ./bin now, and data files under ./data.
+2. Json file as the second arguemnt, instead of the string of "animal|plant|bacteria" as label of pipeline.
+3. Bugs fixed.

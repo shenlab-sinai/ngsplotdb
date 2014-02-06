@@ -8,6 +8,7 @@
 *.egg-info
 dist
 build
+output
 tmp
 database
 eggs
@@ -19,9 +20,8 @@ develop-eggs
 lib
 lib64
 __pycache__
-spec_anno
 RA
-jq
+bin/jq
 
 # Installer logs
 pip-log.txt

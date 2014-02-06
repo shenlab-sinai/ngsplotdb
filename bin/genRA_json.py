@@ -19,7 +19,8 @@ def main():
     assembly = sys.argv[4]
     ENSVer = sys.argv[5]
     RA_path = sys.argv[6]
-    temp = loadJSON("json/RA_template.json")
+    pro_data_path = sys.argv[7]
+    temp = loadJSON(os.path.join(pro_data_path,"json/RA_template.json"))
     temp["genome"] = genome
     temp["version"] = NPVer
     temp["species"] = species
