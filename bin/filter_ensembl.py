@@ -20,6 +20,8 @@ def main():
         if len(line) == 0:
             break;
         line = string.strip(line)
+        if line.startswith("#"):
+            continue;
         annoPart = string.split(line, sep="\t")[-1][:-1].replace("\"", "")
         # annoPartL = string.split(annoPart, sep=";")
         source = line.split("\t")[1]  # LS.
