@@ -74,6 +74,7 @@ sub read_gtf_tbl{
 	# Go through each GTF line.
 	while(<GTF>){
 		chomp;
+		next if /^#/;
 		my($chrom,$source,$feature,$start,$end,$score,$strand,
 			$frame,$attributes) = split /\t/;
 		next if $feature ne 'exon';	# ignore non-exon info.
