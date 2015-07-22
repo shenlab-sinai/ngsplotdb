@@ -4,7 +4,7 @@ make_feature_list <- function(feature.anno, database, gene.anno=NULL){
 	stopifnot(database == 'refseq' || (database == 'ensembl' && !is.null(gene.anno)))
 	# Read features.
 	feature.cols <- c('chrom','start','end',
-		'gname','tid','tstrand','tstart','tend','feature','dis', 'biotype')
+		'gname','tid','tstrand','tstart','tend','feature','dis', 'biotype', 'gsymbol')
 	if(database == 'ensembl'){
 		feature.cols[4] <- 'gid'
 	}
