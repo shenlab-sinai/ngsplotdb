@@ -39,4 +39,4 @@ For the annotation of ENCODE DHS regions.
 Multiple threads are supported, default is 4.
 
 TODO:
-	* Now it needs hg19.ensembl.biotype.txt to get gene name, it is annoying.
+* Now it needs hg19.ensembl.biotype.txt to get gene name, it is annoying.
