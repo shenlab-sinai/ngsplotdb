@@ -89,7 +89,9 @@ for i in ${NP_DB_PATH}/tmp/${GENOME}*.biotype.txt; do
 		egrep "^chr" | grep -v "random" | egrep -v "^NT" > ${i/txt/bed}
 	cut -f2,3 ${i/txt/bed} | paste ${i/txt/bed} - > ${NP_DB_PATH}/tmp/${GENOME}.temp.bed
 	slopBed -l 3e3 -r 1e3 -g ${RA_PATH}/${GENOME}.genome -s -i ${NP_DB_PATH}/tmp/${GENOME}.temp.bed | \
-		awk '{if(($3>$2)&&($3>0))print $0}' > ${NP_DB_PATH}/tmp/${GENOME}.temp_ext.bed
+		awk '{if(($7=="+")&&($3>$2)&&($3>0))print $0}' > ${NP_DB_PATH}/tmp/${GENOME}.temp_ext.bed
+	slopBed -l 1e3 -r 3e3 -g ${RA_PATH}/${GENOME}.genome -s -i ${NP_DB_PATH}/tmp/${GENOME}.temp.bed | \
+		awk '{if(($7=="-")&&($3>$2)&&($3>0))print $0}' >> ${NP_DB_PATH}/tmp/${GENOME}.temp_ext.bed
 	mv ${NP_DB_PATH}/tmp/${GENOME}.temp_ext.bed ${i/biotype.txt/biotype_region_ext.bed}
 	rm ${NP_DB_PATH}/tmp/${GENOME}.temp.bed
 done
